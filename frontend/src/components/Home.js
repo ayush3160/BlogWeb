@@ -2,12 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import {decode as atob, encode as btoa} from 'base-64'
+import ReactLoading from "react-loading";
 
 export default function Home() {
   let navigate = useNavigate()
   const [name, setName] = useState("");
   const [blogs, setBlogs] = useState([]);
   const [id,setID] = useState();
+  const [loading,setLoading] = useState(false)
 
 
   useEffect(() => {
@@ -20,7 +22,7 @@ export default function Home() {
         navigate("/login")
       }else{
       const id1 = user.id
-
+      setLoading(true);
       setID(id1)
       fetch("/api/homereq/home", {
       method: "POST",
@@ -35,6 +37,7 @@ export default function Home() {
       .then((data) => {
         setName(data.name);
         setBlogs(data.blogs);
+        setLoading(false);
       });
       // fetch("/api/homereq/allblog")
       // .then((res) => {
@@ -50,7 +53,15 @@ export default function Home() {
     }
   }, []);
 
-  return (
+  if(loading){
+    return(
+      <div style={{alignItems : "center"}}>
+        <ReactLoading type="spin" color="#0000FF"
+        height={100} width={50}/>
+        <h1>Loading...</h1>
+      </div>
+    )
+  }else {return (
     <>
       <div className="container">
         <div className="row">
@@ -108,5 +119,5 @@ export default function Home() {
         </div>
       </div>
     </>
-  );
+  )};
 }
