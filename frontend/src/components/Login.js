@@ -17,7 +17,7 @@ export default function Login(props){
     }
 
     const handleClick = () => {
-        fetch('api/auth/login',{
+        fetch('/api/auth/login',{
             method : "POST",
             headers :{
               'Content-Type': 'application/json'

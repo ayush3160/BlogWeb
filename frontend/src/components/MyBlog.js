@@ -7,6 +7,7 @@ import ReactLoading from "react-loading";
 export default function MyBlog() {
   const [blogs, setBlogs] = useState([]);
   const [loading,setLoading] = useState(false);
+  const [change,setChange] = useState(false)
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -39,7 +40,22 @@ export default function MyBlog() {
       alert("You are not logged In")
       navigate("/login")
     }
-  }, []);
+  }, [change]);
+
+
+  const handleDelete = (id) => {
+    fetch('/api/operator/delete',{
+      method : "POST",
+      headers : {
+        "Content-Type": "application/json",
+      },
+      body : JSON.stringify({id : id})
+    }).then((result) => {
+      return result.json()
+    }).then((data) => {
+        setChange(!change)
+    })
+  }
 
   if(loading){
     return(
@@ -67,6 +83,7 @@ export default function MyBlog() {
                   <div
                     style={{ display: "block", borderBottom: "1px solid grey" }}
                   >
+                    <button className="btn btn-danger" style={{float : "right"}} onClick={() => {handleDelete(value._id)}}>Delete</button>
                     <h1 class="card-title" style={{ color: "red" }}>
                       {value.title.toUpperCase()}
                     </h1>
